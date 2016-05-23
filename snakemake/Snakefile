@@ -1,0 +1,42 @@
+from snakemake.exceptions import MissingInputException
+
+rule prodigal_run:
+    input:
+        "data/{sample}.gbk"
+    output:
+        # protein translations
+        faa="orfs/{sample}.faa",
+        fna="orfs/{sample}.fna",
+        gbk="orfs/{sample}.gbk"
+    shell:
+        """
+        prodigal -i {input} \
+                 -a {output.faa} \
+                 -p meta \
+                 -d {output.fna} > {output.gbk}
+        """
+
+rule diamond_run:
+    input:
+        faa="orfs/{sample}.faa",
+        db="data/db.dmnd"
+    output:
+        daa="mapped_orfs/{sample}.daa"
+    log:
+        tmp="tmp"
+    shell:
+        """
+        mkdir tmp;
+        diamond blastp -d {input.db} -q {input.faa} -a {output.daa} -t {log.tmp}
+        """
+
+rule diamond_view:
+    input:
+        daa="mapped_orfs/{sample}.daa"
+    output:
+        "mapped_orfs/{sample}.m8"
+    shell:
+        """
+        diamond view -a {input.daa} -o {output}
+        """
+
