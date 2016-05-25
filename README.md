@@ -11,5 +11,7 @@ source ~/.bashrc
 
 Then install a new environment.  To install a snakemake compatible environment, use the following code
 ```bash
-conda env create -f environment.yml
+conda config --add channels http://conda.anaconda.org
+conda create -n snakemake-tutorial -c zechxu --file requirements.txt
+snakemake -np mapped_orfs/seq.cluster001.m8
 ```
