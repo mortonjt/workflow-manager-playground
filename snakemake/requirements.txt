@@ -1,0 +1,5 @@
+graphviz=2.38.0
+python=3.5.1
+snakemake=3.5.5
+pyyaml=3.11
+micronota
